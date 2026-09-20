@@ -1,0 +1,184 @@
+//C# MONEBEHAVIOUR
+// CONCEPT: A GAME CHARACTER REPRESENTED AS DATA + BEHAVIOR(A CLASS)
+// CODE PROPER
+
+using System;
+class CHARACTER
+{
+	public string Name;
+	public int X, Y;. // position on the map
+	public int Width, Heigth; // bounding shape
+	public int Health;
+
+	//Constructor: How a chracter is "born" 
+	public Character(string name int x, int y, int width, int heigth, in health)
+
+  
+	
+{
+	Name= name;
+	X = x;
+	Y = y;
+	Width = width;
+	Heigth = heigth;
+	Health = health;
+}
+// BEHAVIOR : methods define what the Character can Do
+public void MoveTo(int newX, int newY)
+{
+	X = newX;
+	Y = newY;
+	Console.Writeline($"{Name} move to ({X}, {Y})");
+
+}
+public void TakeDamage(int amount)
+{
+	Health -= amount; //Decrease of your health
+	Health = Math.Max(Health, 0);
+	Console.Writeline($"{Name} tool {amount} damage.Health:{Health}")
+}
+public void PrintShape()
+	{
+		//Draw teh Character as an ASCII rectangle  for (int row = 0; row < Heigth' row++)
+	}
+{
+	Console.Writeline(new string('#', Width));
+}
+//Movement for Gridbased Character
+class Program
+{
+	static void Main()
+	{
+		Character hero = new Character("Hero", 0, 0, 3, 2, 100);
+		hero:PrintShape();
+		hero, MoveTo(5,3);
+		hero.TakeDamage(25);
+
+	}
+}
+
+//GRID BASE Movement
+//GameObject
+
+using UnityEngine;
+public class GridMovement : MonoBehaviour
+{
+	public float tilesize=1.0f; //size of one grid cell
+	public float moveSpeed = 10f // how fast was glide
+	public Vector3 targetPosition1
+	private bool is Moving = false;
+
+	void Start()
+	{
+		//Snap starting position to the grid so everything lines up
+		targetPosition = SnapToGrid(tarnsform.position);
+		tarnsform.position = targetPosition
+	}
+	void Update()
+	{
+		if(!isMoving)'
+		{
+			HandleInput();
+		}
+		else
+	{
+		//Smoothly guide to next line
+		transform.position = Vector3.MoveTowards(transform.position,targetPosition.moveSpeed* Tile.delta.Time);
+		if (Vector 3.Distance(tarnsform.positon,targetPosition) <0.001f)
+		{
+			transform.position = targetPosition;
+			isMoving = false;
+		}
+	}
+}
+	void HandleInput()
+	{
+		Vector3 direction = Vector3.zero;
+
+		if(Input.GetKeyDown(KeyCode.W)d direction = Vector3.up);
+		else if (Input.GetKeyDown(KeyCode.S)) direction = Vector3.down;
+		else if (Input.GetKeyDown(KeyCode.A)) direction = Vector3.left;
+		else if (Input.GetKeyDown(KeyCode.D)) direction = Vector3.right;
+
+		if (direction != Vector3.zero)
+		{
+			targetPosition = tarnsform.Position + direction * tileSize;
+			isMoving = true;
+		{
+		return new Vector3(
+			Mathf.Round(pos.x / tilesize) *tileSize,
+			Mathf.Round(pos.y / tilesize) *tileSize,
+			pos.z
+		);
+	}
+
+}
+//Movement for Freemovement Character (VECTOR BASED) Character
+using UnityEngine;
+public class Freemovement: MonoBehaviour
+{
+	public float moveSpeed 5f;
+	void update()
+	{
+		// GetAxis give smooth value between -1 and 1
+		float horizontal = Input.GetAxis("Horizontal"); // A/D or LEFT/RIGHT arrows
+		float vertical = Input.GetAxis("Vertical"); // W/S or UP/DOWN arrows
+		Vector3 direction = new Vector3(horizontal, vertical, 0f);
+		// Diagonal Movement
+		if(direction.magnitude > 1f)
+		{
+			direction.Normalize();
+		}
+			transform.positon += direction * moveSpeed * Time.delta.Time;
+	}
+}
+//Movement for Physicsbased Character
+//GameObject/ Rigibody2D component 
+using UnityEngine;
+
+[RequireComponent(typeif(Rigibody2D))]
+public class PhysicsMovement: MonoBehaviour
+{
+	public float moveForce =f;
+	public float jumpForce = 7f;
+	public float maxSpeed = 6f;
+
+	private Rigibody2D rb;
+	private bool isGrounde = false;
+
+	void Start()
+	{
+		rb = GetComponent<Rigibody2D>();
+
+	}
+	void FixedUpdate()
+	{
+		//Physic change FixedUpdate
+		//Frame rate
+		float horizontal = Input.GetAxis("Horizontal");
+		rb.AddForce(new Vector2(horizontal * moveForce, 0f));
+		//Clam Horizontal
+		if (Mathf.Abs(rb.velocity.x)> maxSpeed)
+		{
+			rb.velocity = new Vector2(Mathf.sign(rb.velocity.x)* maxSpeed, rb.velocity.y);
+
+		}
+	}
+	void OnCallisionEnter2D(Collision2D collisoion)
+	{
+		if (collision.GameObject.CompareTag9Ground("Ground"))
+		{
+			isGrounded = true;
+		}
+	}
+	void OnCallisionExit2D(Collision2D collision)
+	{
+		if(collision.GameObject.CompareTag("Ground"))
+		{
+			is Grounded = false;
+		}
+	}
+}
+
+
+}
